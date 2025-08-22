@@ -1,0 +1,8 @@
+qgis
+torch
+torchvision
+geopandas
+rasterio
+numpy
+requests
+Pillow
