@@ -1,14 +1,9 @@
 AutoEcoMap/
-│── __init__.py
-│── AutoEcoMap.py
-│── resources.qrc
-│── resources_rc.py
-│── AutoEcoMap_dialog.py
-│── AutoEcoMap_dialog_base.ui
-│── metadata.txt      ✅ REQUIRED
-│── icon.png          ✅ Recommended (≤256x256)
-│── detection.py      (your detection logic)
-│── generation.py     (your generation logic)
-│── sync.py           (optional, if used)
-│── requirements.txt  (optional)
-└── tests/            (optional, for unit tests)
+    __init__.py
+    AutoEcoMap.py
+    metadata.txt
+    AutoEcoMap_dialog.py
+    AutoEcoMap_dialog_base.ui
+    resources.qrc
+    resources_rc.py
+    icon.png
