@@ -1,9 +1,59 @@
-AutoEcoMap/
-    __init__.py
-    AutoEcoMap.py
-    metadata.txt
-    AutoEcoMap_dialog.py
-    AutoEcoMap_dialog_base.ui
-    resources.qrc
-    resources_rc.py
-    icon.png
+name: AutoEcoMap Plugin CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Set up Python environment
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      # Install QGIS & dependencies
+      - name: Install QGIS dependencies
+        run: |
+          sudo add-apt-repository -y ppa:ubuntugis/ppa
+          sudo apt-get update
+          sudo apt-get install -y qgis python3-qgis qgis-plugin-grass gdal-bin
+
+      # Install Python packages for testing
+      - name: Install Python requirements
+        run: |
+          pip install pytest flake8
+
+      # Lint plugin for Python issues
+      - name: Run code linter
+        run: |
+          flake8 AutoEcoMap || true
+
+      # Validate QGIS Plugin
+      - name: Validate QGIS Plugin
+        run: |
+          qgis_plugin_tool validate AutoEcoMap
+
+      # Package the plugin for deployment
+      - name: Create release zip
+        run: |
+          cd ..
+          zip -r AutoEcoMap.zip AutoEcoMap -x "*.git*" "*.idea*" "__pycache__/*" "*.pyc"
+          mv AutoEcoMap.zip $GITHUB_WORKSPACE/
+
+      # Upload ZIP as an artifact
+      - name: Upload plugin ZIP
+        uses: actions/upload-artifact@v4
+        with:
+          name: AutoEcoMap
+          path: AutoEcoMap.zip
